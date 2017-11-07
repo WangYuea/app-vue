@@ -1,8 +1,8 @@
 <template>
 <div class='cmt-container'>
 <h3>发表评论</h3>
-<textarea placeholder='请输入要评论的内容（最多102字）' maxlength='120'></textarea>
-<mt-button type='primary' size='large'>发表评论</mt-button>
+<textarea placeholder='请输入要评论的内容（最多102字）' maxlength='120' v-model='info'></textarea>
+<mt-button type='primary' size='large' @click='addcomments'>发表评论</mt-button>
 <div class='cmt-list'>
     <div class='cmt-item' v-for='(item,i) in comments'>
     <div class='cmt-title'>
@@ -22,7 +22,8 @@
         data(){
             return{
                 pageIndex:1,
-                comments:[]
+                comments:[],
+                info:''
             }
         },
         created(){
@@ -41,6 +42,20 @@
             getmore(){
                 this.pageIndex++;
                 this.getcomments()
+            },
+            addcomments(){
+                if(this.info.trim().length===0){
+                    return Toast('评论不能为空')
+                }
+                this.$http.post('api/postcomment/'+this.$route.params.id,{content:this.info.trim()}).then(result=>{
+                    if(result.body.status===0){
+                        var cmt={user_name:'匿名用户',add_time:Date.now(),content:this.info.trim()}
+                        this.comments.unshift(cmt)
+                        this.info=''
+                    }else{
+                        Toast('评论添加失败')
+                    }
+                })
             }
         },
         props:['id']
