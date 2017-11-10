@@ -30,7 +30,6 @@
             </div>
         </div>
 
-
         <div class='mui-card'>
             <div class='mui-card-header'>商品参数</div>
             <div class='mui-card-content'>
@@ -61,7 +60,7 @@
             lunbotu: [],
             goodsinfo:{},
             ballflag:false,
-            selectedCount:1
+            selectedCount:1,
         }
     },
     created(){
@@ -98,6 +97,8 @@
         },
         addshop(){
             this.ballflag=!this.ballflag
+            var goodsinfo={id:this.id,count:this.selectedCount,price:this.goodsinfo.sell_price,selected: true};
+            this.$store.commit('addToCar',goodsinfo);
         },
         beforeEnter(el){
             el.style.transform='translate(0,0)'
